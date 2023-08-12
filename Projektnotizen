@@ -1,0 +1,111 @@
+Stand: lesen ClerkTest.java zeile 151
+
+jdbc ubdaten auf jdbc 4.2:
+jdbc-Klassen sind in mysql-connector-java-8.0.28.jar
+AUCH UPDATE VON MYSQL war notwendig.
+mysql-connector-java-8.0.28.jar nach arztPraxis_Java/libs
+diese Jar-Datei in den Classpath setzen (Project Structure, Libraries)
+Zeile 'Class.forName...' löschen oder url ändern.
+gute ANLEITUNG: https://www.codejava.net/java-se/jdbc/connect-to-mysql-database-via-jdbc
+-------------------------------------------------
+MySQL 8: root-password: secret
+         starten: C:\javaDeveloper412\setup\MySQL Server 8.0\bin\ -> mysqld ->mysql -u root -p
+
+PROBLEM: can't connect to mysql server on 'localhost' (10061) -
+-> https://stackoverflow.com/questions/119008/cant-connect-to-mysql-server-on-localhost-10061
+-> Task Manager->Dienste->MySQL80->rechte Maustaste,starten.
+
+PROBLEM: Junit Tests:
+"WARNING: TestEngine with ID 'junit-jupiter' failed to discover tests"
+"java: error: release version 5 not supported"
+->
+https://stackoverflow.com/questions/70452633/org-junit-platform-commons-junitexception-testengine-with-id-junit-jupiter-fa/70503467
+https://stackoverflow.com/questions/59601077/intellij-errorjava-error-release-version-5-not-supported
+
+----------------------------------------------------
+Schmierzettel:
+
+Methode: Clerk.unleashTemplates()  - soll alle Templates durchlaufen und "die Programm-Startmethode" sein.
+test: Hamcrest, Matcher 'assertThat' - ("Mengenabfragen. Die praktische Methode hasItems() zum Beispiel testet,
+ ob Elemente in einer Collection sind; ohne Matcher wäre der Test in Java mehr Schreibarbeit.>"
+
+next:
+testen in java:
+Zwischenfrage: wo in java-programm werden erzeugte Appointments gesammelt?
+-TESTS schreiben, Klassen von unten begonnen, aktuell in Arbeit: Clerk.unleashTemplates()
+"normale" Funktionalität + korrekte Fehlerbehandlung
+-ensureThatInitializationOfTolkeinCharactorsWorks
+-ensureThatEqualsWorksForCharaters
+Bei Start: Office.templates aus Datenbank holen.
+Begonnen mit getTemplatesFromRepo() in MySQLRepo.clas
+
+
+templates in sql - TIME statt varchar für starttime
+
+----------
+Use Cases textuell: alle Termine werden in einer Kartei abgespeichert. Jeder
+Eintrag enthält Zuordnungen/Eigenschaften wie 'frei/besetzt' und Patient.
+
+Organizer for appointments in a medical/therapeutical office.
+
+The DOCTOR and employees can CREATE templates for appointment windows,
+eg. Monday 08:15-08:30. Those weekly recurring appointments will be
+generated for three weeks in advance. Appointments can be booked by
+patients. Bookings can be canceled.
+
+
+-------
+when several updates, update in batches (=chargen=Ladung, Stapel):
+prepState.setString(1, "Uprising");
+prepState.setString(2, "Bob Marley and the Wailers");
+    preparedStatement.addBatch();
+
+prepState.setString(1, "Wildflowers");
+prepState.setString(2, "Tom Petty and the Heartbreakers");
+    preparedStatement.addBatch();
+
+    int[]  rowsAffected   = preparedStatement.executeBatch();
+
+QU: https://www.infoworld.com/article/3388036/what-is-jdbc-introduction-to-java-database-connectivity.html
+
+GROB-PLAN:
+1.Testen abschließen /schnell und dirty
+2.Programm abrunden, abschließen /sauber, einfache Funktionalität
+3.Datenbank         /dirty
+4.Spring            /dirty
+
+---
+
+SQL Zeit-Typ -> JAVA Zeit-Typ, Möglichkeiten:
+
+-Update auf JDBC 4.2, Instant und Timestamp.
+
+-String in SQL, Instant in Java.
+
+-SQL Timestamp -> Java toTimestamp().
+
+
+Termine erstellen Methoden:
+
+ODA:-alle Termine bei erst-Start. Problem: noch keine Vorlagen bei erst-Start.
+	->Terminerstellung bei Vorlagenerstellung oder
+	->Menü-Zwischenschritt 'Vorlagen aktivieren' (alle oder nur einzelne),
+	  erst bei Aktivierung werden Termine erstellt (Zwischenspeicherung) und danach
+	  alle auf einmal ins repository geschrieben.
+
+-------
+Später
+
+-Tagesgebundene Termine alle 24h
+
+-Schleife mit der 24h-Methode bei Neustart nach längerer Zeit
+
+
+Anm: mysql-Datentyp DATETIME
+Runde Klammern dienen in SQL zum Gruppieren von Parametern oder Argumenten.
+
+--
+Format "ISO 8601 combined date-time format": zB 2007-12-03T10:15:30.00Z
+The Z stands for the Zero timezone, as it is offset by 0 from the Coordinated Universal Time (UTC).
+Verwendung etwa bei Instant.parse(CharSequence text)
+
