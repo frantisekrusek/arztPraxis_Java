@@ -6,6 +6,7 @@ import java.time.Instant;
 //Supervisor keeps account of updates of the appointment schedule.
 public class Supervisor {
     private static final Supervisor SUPERVISOR = new Supervisor();
+    //LastUpdate ist IMMER 00:00:00h eines Wochentages. Damit einhergehend werden alle Appointments dieses Wochentages erzeugt.
     //'due template': template with date and time that is to be used for the creation of an appointment.
     //-Function of @param lastUpdate: all templates with date and time before AND same date and as this transformend instant are 'due templates'
     //and have been used to trigger one appointment each.

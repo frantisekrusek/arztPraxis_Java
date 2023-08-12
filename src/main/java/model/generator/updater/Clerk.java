@@ -9,7 +9,6 @@ import model.office.Office;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -122,6 +121,13 @@ public class Clerk extends Generator {
       dann stop.
      */
     public Set<Appointment> catchUp(Instant today, Instant lastUpdate, Set<Template>[] templateArr){
+        //NEU:
+        if(today.minus(24, ChronoUnit.DAYS).isAfter(lastUpdate)){
+            ZonedDateTime newDay = getOffice().lastUpdateToZDT();
+            generateAppsOfDay(lastUpdate, templateArr);
+            moveCursorOfLastUpdatedTemplate(newDay);
+        }
+        //ALT:
         Instant now = today;
         LocalDate lDnow = ZonedDateTime.ofInstant(now, super.getOffice().getOffice_zoneId()).toLocalDate();
         LocalTime lTnow = ZonedDateTime.ofInstant(now, super.getOffice().getOffice_zoneId()).toLocalTime();

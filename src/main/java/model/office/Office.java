@@ -5,8 +5,8 @@ import model.appointment.Template;
 import model.generator.Supervisor;
 import model.person.officeManager.OfficeManager;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,8 +28,8 @@ public class Office {
         this.appointments = new HashSet<>();
     }
 
-    public LocalDateTime lastUpdateToLDT(){
-        return LocalDateTime.ofInstant(Supervisor.getInstance().getLastUpdate(), office_zoneId);
+    public ZonedDateTime lastUpdateToZDT(){
+        return ZonedDateTime.ofInstant(Supervisor.getInstance().getLastUpdate(), office_zoneId);
     }
 
     //GETTER, SETTER
