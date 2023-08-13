@@ -62,7 +62,7 @@ public class Clerk extends Generator {
      @param templateArray should be Set<Template>[] templates from office.*/
     public Set<Appointment> generateAppsOfDay(Instant lastUpdate, Set<Template>[] templateArray){
         Set<Appointment> appointments = new LinkedHashSet<>(); //because it is ordered
-        ZonedDateTime zonedLastUpdate = lastUpdate.atZone(super.getOffice().getOffice_zoneId());
+        ZonedDateTime zonedLastUpdate = getOffice().lastUpdateToZDT();
         lastTemplateOfDay = LocalTime.MIDNIGHT; //entfernen?
 
         int weekday = this.findWeekdayFollowingLastUpdate(zonedLastUpdate);
@@ -82,7 +82,7 @@ public class Clerk extends Generator {
         this.moveCursorOfLastUpdatedTemplate(zonedLastUpdate);
 
         return appointments;
-    }//end generateAppsofDay()
+    }//end generateAppsOfDay()
 
     //Helper method
     //entfernen?
@@ -107,59 +107,18 @@ public class Clerk extends Generator {
         return weekday;
     }
 
-    /* todo:
-     Methode catchUp:
-     generateAppsOfDay() wird so oft wiederholt bis das letzte Template
-     des gestrigen Tages ausgelöst wurde.
+    /*
      Aufruf der Methode täglich um 00:00h (LocalTime.MIN)
-     Algo:
-
      Instant.now() muss Parameter sein, um Methode testbar zu machen.
-     call generateAppsOfDay()
-     wenn
-     BEDINGUNG: lastUpdatedTemplate.getLocalDate() == Instant.now.toLocalDate().minusDays(1);
-      dann stop.
      */
-    public Set<Appointment> catchUp(Instant today, Instant lastUpdate, Set<Template>[] templateArr){
-        //NEU:
-        if(today.minus(24, ChronoUnit.DAYS).isAfter(lastUpdate)){
-            ZonedDateTime newDay = getOffice().lastUpdateToZDT();
-            generateAppsOfDay(lastUpdate, templateArr);
-            moveCursorOfLastUpdatedTemplate(newDay);
-        }
-        //ALT:
-        Instant now = today;
-        LocalDate lDnow = ZonedDateTime.ofInstant(now, super.getOffice().getOffice_zoneId()).toLocalDate();
-        LocalTime lTnow = ZonedDateTime.ofInstant(now, super.getOffice().getOffice_zoneId()).toLocalTime();
-        Set<Appointment> setOfApps = new LinkedHashSet<>();
-
-        if (lastUpdate == null){
+    public Set<Appointment> catchUp(Instant now, Instant lastUpdate, Set<Template>[] templateArr){
+        if (lastUpdate == null) {
             lastUpdate = Instant.MIN;
         }
-        LocalDate lDLastUpdate = LocalDate.ofInstant(lastUpdate, super.getOffice().getOffice_zoneId());
-
-        // ALLES NEU MACHEN:
-        if (lastUpdate.isBefore(now)){
-            if (lTnow.isBefore(LocalTime.of(23, 59, 59))){
-                System.out.println("LOG: if-Zweig");
-                while ( ! lDnow.minusDays(1).equals(lDLastUpdate)) {
-                    //CORE
-                    setOfApps.addAll(generateAppsOfDay(lastUpdate, templateArr));
-                    lDLastUpdate = LocalDate.ofInstant(Supervisor.getInstance().getLastUpdate(), super.getOffice().getOffice_zoneId());
-                }
-            }else{
-                System.out.println("LOG: else-Zweig");
-                while ( ! lDnow.equals(lDLastUpdate)){
-                    System.out.println("LOG: Anfang Schleife, lDlastUpdate: " + lDLastUpdate);
-                    //CORE
-                    System.out.println("LOG: Durchlauf while-Schleife");
-                    setOfApps.addAll(generateAppsOfDay(lastUpdate, templateArr));
-                    lastUpdate = Supervisor.getInstance().getLastUpdate();
-                    lDLastUpdate = LocalDate.ofInstant(lastUpdate, super.getOffice().getOffice_zoneId());
-                    System.out.println("LOG: lDlastUpdate: " + lastUpdate);
-                    System.out.println("LOG: Ende Schleife, lDlastUpdate: " + lDLastUpdate);
-                }
-            }
+        Set<Appointment> setOfApps = new LinkedHashSet<>();
+        while (now.minus(24, ChronoUnit.DAYS).isAfter(lastUpdate)) {
+            //CORE
+            setOfApps.addAll(generateAppsOfDay(lastUpdate, templateArr));
         }
         return setOfApps;
     }
