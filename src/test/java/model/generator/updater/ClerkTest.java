@@ -15,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ClerkTest {
 
     private Clerk mockClerk;
+    private ZoneId myZoneId;
     private Template activeTemplate_Mon_00_00, activeTemplate_Mon_08_00, activeTemplate_Mon_08_15,
             activeTemplate_Tue_11_00, activeTemplate_Tue_12_00,
             activeTemplate_Wed_11_00,
@@ -36,6 +38,7 @@ class ClerkTest {
     @BeforeEach
     public void setUpMocks(){
         mockClerk = new Clerk(new Office(),1);
+        myZoneId = mockClerk.getOffice().getOffice_zoneId();
         activeTemplate_Mon_00_00 = new Template(DayOfWeek.MONDAY, LocalTime.MIDNIGHT); activeTemplate_Mon_00_00.setActive(true);
         activeTemplate_Mon_08_00 = new Template(DayOfWeek.MONDAY, LocalTime.of(8,00)); activeTemplate_Mon_08_00.setActive(true);
         activeTemplate_Mon_08_15 = new Template(DayOfWeek.MONDAY, LocalTime.of(8,15)); activeTemplate_Mon_08_15.setActive(true);
@@ -56,6 +59,8 @@ class ClerkTest {
                 new HashSet<Template>(Arrays.asList(activeTemplate_Fri_11_00)),
                 new HashSet<Template>(Arrays.asList(activeTemplate_Sat_11_00))
         };
+      //  mockTemplatesArr
+       //mockClerk.getOffice().getTemplates();
     }
 
     @Test
@@ -160,7 +165,7 @@ class ClerkTest {
         LocalDateTime now_Tue_22_01_11___2359 = ZonedDateTime.of
                         (2022, 1,11,23,59,59,0,ZoneId.of("Europe/Vienna")).
                         toLocalDateTime(); //Tuesday
-        int exp11 = 11;
+        int exp15 = 15;
 
 
         Instant lU_Mon_22_01_10_T_2359 = ZonedDateTime.of
@@ -170,9 +175,9 @@ class ClerkTest {
         int exp2 = 2;
 
         return Stream.of(
-                Arguments.of(lU_Sun_22_01_02_T_0000, now_Fri_22_01_07___2359, exp8)
-                //Arguments.of(lU_Sun_22_01_02_T_1030, now_Tue_22_01_11___2359, exp11)
-                //Arguments.of(lU_Mon_22_01_10_T_2359, now_Tue_22_01_11___2359, exp2)
+                Arguments.of(lU_Sun_22_01_02_T_0000, now_Fri_22_01_07___2359, exp8),
+                Arguments.of(lU_Sun_22_01_02_T_0000, now_Tue_22_01_11___2359, exp15),
+                Arguments.of(lU_Mon_22_01_10_T_2359, now_Tue_22_01_11___2359, exp2)
         );
     }
 
@@ -187,33 +192,32 @@ class ClerkTest {
     @DisplayName("compares number of templates and generated appointments in specified period of time" +
             " AND checks correct setting of Supervisor.lastUpdate")
     void testCatchUp(Instant mockLastUpdate, LocalDateTime mockNow, int expectedApps ) {
-        Instant mockToday = mockNow.toInstant(ZoneOffset.ofHours(1));
+        //ich suche offset "Vienna" zu Instant(entspricht wohl Greenwich Mean Time, jetzt Koordinierte Weltzeit = UTC)
+        ZoneOffset offset = myZoneId.getRules().getOffset(mockNow);
+        Instant mockNowInst = mockNow.toInstant(offset);
+
         Instant originalLU = Supervisor.getInstance().getLastUpdate();
+        if (originalLU == null) {
+            originalLU = LocalDateTime.of(1900, 01,01,00,00,00,00)
+                    .toInstant(offset);
+        }
+        Supervisor.getInstance().setLastUpdate(mockLastUpdate);
+
+        System.out.println("LOG: originalLU: " + LocalDateTime.ofInstant(originalLU, myZoneId));
+        System.out.println("LOG: mockNow: " + mockNow);
         //core
-        int actualApps = mockClerk.catchUp(mockToday, mockLastUpdate, mockTemplatesArr).size();
+        int actualApps = mockClerk.catchUp(mockNowInst, mockLastUpdate, mockTemplatesArr).size();
 
         assertEquals(expectedApps, actualApps, "Incorrect number of generated Appointments");
+        System.out.println("LOG: expectedApps: " + expectedApps + "\n actualApps: " + actualApps);
         //
         Instant instLastUpdAfter = Supervisor.getInstance().getLastUpdate();
-        LocalDateTime ldtLastUpdAfter = LocalDateTime.ofInstant(instLastUpdAfter, mockClerk.getOffice().getOffice_zoneId());
 
-        Set<Template> templatesOfToday = mockTemplatesArr[mockNow.toLocalDate().getDayOfWeek().getValue()];
-        //System.out.println("LOG: day of week: " + mockNow.toLocalDate().getDayOfWeek());
-                Optional<Template> latestTemplateOpt = templatesOfToday.stream().max((t1, t2) -> {
-            if (t1.getStartTime().isBefore(t2.getStartTime())) {
-                return -1;
-            } else if (t1.getStartTime().equals(t2.getStartTime())) {
-                return 0;
-            } else {
-                return 1;
-            }
-        });
-        Template latest = latestTemplateOpt.get();
-        //System.out.println("LOG: latest Template: " + latest.toString());
-        LocalDateTime expected = LocalDateTime.of(mockNow.toLocalDate(), latest.getStartTime());
+        LocalDateTime expected = LocalDateTime.of(mockNow.toLocalDate(), LocalTime.MIN );
+        LocalDateTime actual = LocalDateTime.ofInstant(instLastUpdAfter, myZoneId);
 
-        LocalDateTime actual = ldtLastUpdAfter;
         assertEquals(expected, actual, "Setting of Supervisor.lastUpdate incorrect");
+        System.out.println("LOG:\nexpected lastUpdate: " + expected + "\nactual lastUpdate: " + actual);
         //
         Supervisor.getInstance().setLastUpdate(originalLU);
     }

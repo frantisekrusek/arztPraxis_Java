@@ -62,8 +62,7 @@ public class Clerk extends Generator {
      @param templateArray should be Set<Template>[] templates from office.*/
     public Set<Appointment> generateAppsOfDay(Instant lastUpdate, Set<Template>[] templateArray){
         Set<Appointment> appointments = new LinkedHashSet<>(); //because it is ordered
-        ZonedDateTime zonedLastUpdate = getOffice().lastUpdateToZDT();
-        lastTemplateOfDay = LocalTime.MIDNIGHT; //entfernen?
+        ZonedDateTime zonedLastUpdate = ZonedDateTime.ofInstant(lastUpdate, super.getOffice().getOffice_zoneId());
 
         int weekday = this.findWeekdayFollowingLastUpdate(zonedLastUpdate);
 
@@ -71,7 +70,6 @@ public class Clerk extends Generator {
             if (template.isActive()){
                 LocalDate dateOfApp = zonedLastUpdate.toLocalDate().plusDays(1+(weeks*7));
                 LocalTime timeOfApp = template.getStartTime();
-                this.lastTemplateOfDay = this.findLastTemplate(timeOfApp);//entfernen?
                 ZonedDateTime datetimeOfApp = ZonedDateTime.of(dateOfApp, timeOfApp, super.getOffice().getOffice_zoneId());
                 String name = datetimeOfApp.format(DateTimeFormatter.ofPattern("HH:mm, EEEE dd.MM.uuuu"));
                 appointments.add(new Appointment(name, datetimeOfApp, false));
@@ -112,13 +110,12 @@ public class Clerk extends Generator {
      Instant.now() muss Parameter sein, um Methode testbar zu machen.
      */
     public Set<Appointment> catchUp(Instant now, Instant lastUpdate, Set<Template>[] templateArr){
-        if (lastUpdate == null) {
-            lastUpdate = Instant.MIN;
-        }
+
         Set<Appointment> setOfApps = new LinkedHashSet<>();
-        while (now.minus(24, ChronoUnit.DAYS).isAfter(lastUpdate)) {
+        System.out.println("LOG: " + now.minus(24, ChronoUnit.HOURS).isAfter(Supervisor.getInstance().getLastUpdate()));
+        while (now.minus(24, ChronoUnit.HOURS).isAfter(Supervisor.getInstance().getLastUpdate())) {
             //CORE
-            setOfApps.addAll(generateAppsOfDay(lastUpdate, templateArr));
+            setOfApps.addAll(generateAppsOfDay(Supervisor.getInstance().getLastUpdate(), templateArr));
         }
         return setOfApps;
     }
