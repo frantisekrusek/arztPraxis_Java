@@ -1,6 +1,9 @@
 package model.generator;
 
-import java.time.Instant;
+import java.time.*;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjuster;
 
 //Singleton
 //Supervisor keeps account of updates of the appointment schedule.
@@ -25,6 +28,14 @@ public class Supervisor {
     }
 
     public Instant getLastUpdate() {
+        if (lastUpdate == null){
+            ZonedDateTime newZDT = ZonedDateTime.now().
+                    with(LocalTime.MIN);
+            lastUpdate = newZDT.toInstant();
+                    //ZonedDateTime.now().
+                    //withSecond(0).withMinute(0).withHour(0).withNano(0).toInstant();
+                    //LocalDateTime.now().with(LocalTime.MIN).toInstant(ZoneOffset.of("Europe/Vienna"));
+        }
         return lastUpdate;
     }
     public void setLastUpdate(Instant lastUpdate) {

@@ -15,7 +15,7 @@ public class OfficeManager extends Person {
 
     //ctr
     public OfficeManager(Office office) {
-        this.office = office;
+    this.office = office;
     }
 
     /*
@@ -62,5 +62,9 @@ public class OfficeManager extends Person {
 
     public Office getOffice() {
         return office;
+    }
+
+    public void setOffice(Office office) {
+        this.office = office;
     }
 }

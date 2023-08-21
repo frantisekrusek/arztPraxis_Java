@@ -5,24 +5,33 @@ import model.appointment.Template;
 import model.generator.Generator;
 import model.generator.Supervisor;
 import model.office.Office;
+import model.office.Task;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 /*Clerk (Updater ?) is responsible for creating the correct amount of future appointments. */
 public class Clerk extends Generator {
 
     private int weeks;
     private LocalTime lastTemplateOfDay = LocalTime.MIDNIGHT;
+    private Timer timer;
+
 
     //ctr
-    public Clerk(Office office, int weeks) {
+    public Clerk(int weeks, Office office) {
         super(office);
-
         this.weeks = weeks;
+        this.timer = new Timer();
+
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1).with(LocalTime.MIN);
+        //LocalDateTime localDateTime = LocalDateTime.now();
+        Date nextTaskDate = Date.from(localDateTime.toInstant(super.getOffice().getOffset()));
+
+        timer.scheduleAtFixedRate(new Task(this), nextTaskDate, 1000L*60L*60L*24L);
+        //timer.scheduleAtFixedRate(new Task(this), nextTaskDate, 5000L);
     }
 
     /* "Startmethode"
@@ -62,6 +71,7 @@ public class Clerk extends Generator {
      @param templateArray should be Set<Template>[] templates from office.*/
     public Set<Appointment> generateAppsOfDay(Instant lastUpdate, Set<Template>[] templateArray){
         Set<Appointment> appointments = new LinkedHashSet<>(); //because it is ordered
+        //System.out.println("LOG Clerk 74 lastupdate: " + LocalDateTime.ofInstant(lastUpdate, getOffice().getOffice_zoneId()));
         ZonedDateTime zonedLastUpdate = ZonedDateTime.ofInstant(lastUpdate, super.getOffice().getOffice_zoneId());
 
         int weekday = this.findWeekdayFollowingLastUpdate(zonedLastUpdate);

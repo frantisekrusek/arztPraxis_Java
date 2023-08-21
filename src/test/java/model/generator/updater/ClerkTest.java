@@ -37,7 +37,9 @@ class ClerkTest {
 
     @BeforeEach
     public void setUpMocks(){
-        mockClerk = new Clerk(new Office(),1);
+        Office office = new Office();
+        office.setGenerator(mockClerk);
+        mockClerk = new Clerk(1, office);
         myZoneId = mockClerk.getOffice().getOffice_zoneId();
         activeTemplate_Mon_00_00 = new Template(DayOfWeek.MONDAY, LocalTime.MIDNIGHT); activeTemplate_Mon_00_00.setActive(true);
         activeTemplate_Mon_08_00 = new Template(DayOfWeek.MONDAY, LocalTime.of(8,00)); activeTemplate_Mon_08_00.setActive(true);
@@ -68,7 +70,7 @@ class ClerkTest {
     void testUnleashTemplates() {
         Set<Template> set1 = Collections.singleton(activeTemplate_Mon_00_00);
         Set<Template> set2 = Collections.singleton(inactiveTemplate);
-        Generator generator = new Clerk(new Office(), 1);
+        Generator generator = new Clerk(1, new Office());
         assertEquals(0, generator.getOffice().getAppointments().size(),
                 "Set of Appointments is not empty");
         ((Clerk) generator).unleashTemplates(set1);

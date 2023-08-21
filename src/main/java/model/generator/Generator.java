@@ -21,6 +21,7 @@ public class Generator {
         this.office = office;
     }
 
+
     //LÖSCHEN? Übungsmethode: erzeuge Termin für kommenden zB Mittwoch.
     public Appointment generateAppointment(Template template){
         LocalDate nextWeekday = LocalDate.now().with(TemporalAdjusters.next(template.getWeekday()));
@@ -78,6 +79,10 @@ public class Generator {
     //GETTER
     public Office getOffice() {
         return office;
+    }
+
+    public void setOffice(Office office) {
+        this.office = office;
     }
 }//end class
 
