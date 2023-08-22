@@ -15,7 +15,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -138,7 +137,7 @@ class ClerkTest {
         LocalDate ldLastUpd = LocalDate.ofInstant(mockLastUpdate, mockClerk.getOffice().getOffice_zoneId());
         LocalDate expectedLd = ldLastUpd.plus((1 + (mockClerk.getWeeks() * 7)), ChronoUnit.DAYS);
         for (Appointment a:appointments) {
-            LocalDate actualAppLd = a.getDate().toLocalDate();
+            LocalDate actualAppLd = a.getDateTime().toLocalDate();
             assertEquals(expectedLd, actualAppLd, "appointment has wrong date");
         }
     }

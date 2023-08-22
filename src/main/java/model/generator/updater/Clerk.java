@@ -131,6 +131,13 @@ public class Clerk extends Generator {
     }
     //END catchUp
 
+    public ArrayList<Appointment> sortAppointments(){
+        Set<Appointment> appointments = this.getOffice().getAppointments();
+        ArrayList arrayList = new ArrayList<>(appointments);
+            Collections.sort(arrayList);
+        return arrayList;
+    }
+
 
 
     //GETTER, SETTER
@@ -145,6 +152,8 @@ public class Clerk extends Generator {
     public LocalTime getLastTemplateOfDay() {
         return lastTemplateOfDay;
     }
+
+
 
     //public Office getOffice() {        return office;    }
 

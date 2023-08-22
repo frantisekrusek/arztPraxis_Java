@@ -62,14 +62,14 @@ public class Generator {
                     plus(Duration.ofDays(i*7)).
                     with(template.getStartTime());
 
-            String name = zdt.format(DateTimeFormatter.ofPattern("hh:mm, EEEE dd.MM.uuuu"));
+            String name = zdt.format(DateTimeFormatter.ofPattern("HH:mm, EEEE dd.MM.uuuu"));
 
             Appointment appointment = new Appointment(name, zdt, false);
             appointments.add(appointment);
             System.out.println("LOG: appointment created:\nname: " + appointment.getName());
         }
         return appointments;
-    }//end generateAppointmentsFromTemplate()
+    }//end generateAppsFromSingleTemplate()
 
     public boolean sameWeekdayAndTimeYetToCome(Template t, Instant in){
         return t.getWeekday().equals(LocalDateTime.now().getDayOfWeek())

@@ -36,6 +36,21 @@ public class Office {
         this.appointments = new HashSet<>();
     }
 
+    public Set<Template>[] mergeTemplates(Set<Template>[] newTemplates){
+        for (int i=0; i<7; i++ ){
+            this.templates[i].addAll(newTemplates[i]);
+        }
+        return templates;
+    }
+
+    public Set<Template>[] printTemplates(){
+        for (int i=0; i<7; i++ ){
+            System.out.println("LOG: " + this.templates[i]);
+        }
+        return templates;
+    }
+
+
     public ZonedDateTime lastUpdateToZDT(){
         return ZonedDateTime.ofInstant(Supervisor.getInstance().getLastUpdate(), office_zoneId);
     }
