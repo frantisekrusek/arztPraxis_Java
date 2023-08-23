@@ -207,7 +207,7 @@ class ClerkTest {
         System.out.println("LOG: originalLU: " + LocalDateTime.ofInstant(originalLU, myZoneId));
         System.out.println("LOG: mockNow: " + mockNow);
         //core
-        int actualApps = mockClerk.catchUp(mockNowInst, mockLastUpdate, mockTemplatesArr).size();
+        int actualApps = mockClerk.catchUp(mockNowInst, mockTemplatesArr).size();
 
         assertEquals(expectedApps, actualApps, "Incorrect number of generated Appointments");
         System.out.println("LOG: expectedApps: " + expectedApps + "\n actualApps: " + actualApps);

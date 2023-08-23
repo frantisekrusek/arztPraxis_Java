@@ -18,48 +18,8 @@ public class Start {
     public static void main(String[] args) {
 
         Office office = new Office();
-        //Simulation 1: erste Inbetriebnahme. Einige Templates werden erstellt. Ab (inkl) heute
-        //sollen daraus für 3 Wochen im Voraus Termine erzeugt werden.
         Clerk clerk = (Clerk)office.getGenerator();
-        Template activeTemplate_Mon_00_00, activeTemplate_Mon_08_00, activeTemplate_Mon_08_15,
-                activeTemplate_Tue_11_00, activeTemplate_Tue_12_00,
-                activeTemplate_Wed_11_00,
-                activeTemplate_Tue_23_00,
-                activeTemplate_Thu_11_00,
-                activeTemplate_Fri_11_00,
-                activeTemplate_Sat_11_00,
-                activeTemplate_Sun_07_00, inactiveTemplate;
-        activeTemplate_Mon_00_00 = new Template(DayOfWeek.MONDAY, LocalTime.MIDNIGHT); activeTemplate_Mon_00_00.setActive(true);
-        activeTemplate_Mon_08_00 = new Template(DayOfWeek.MONDAY, LocalTime.of(8,00)); activeTemplate_Mon_08_00.setActive(true);
-        activeTemplate_Mon_08_15 = new Template(DayOfWeek.MONDAY, LocalTime.of(8,15)); activeTemplate_Mon_08_15.setActive(true);
-        activeTemplate_Tue_11_00 = new Template(DayOfWeek.TUESDAY, LocalTime.of(11,00)); activeTemplate_Tue_11_00.setActive(true);
-        activeTemplate_Tue_12_00 = new Template(DayOfWeek.TUESDAY, LocalTime.of(12,00)); activeTemplate_Tue_12_00.setActive(true);
-        activeTemplate_Tue_23_00 = new Template(DayOfWeek.TUESDAY, LocalTime.of(23,00)); activeTemplate_Tue_23_00.setActive(true);
-        activeTemplate_Wed_11_00 = new Template(DayOfWeek.WEDNESDAY, LocalTime.of(11,00)); activeTemplate_Wed_11_00.setActive(true);
-        activeTemplate_Thu_11_00 = new Template(DayOfWeek.THURSDAY, LocalTime.of(11,00)); activeTemplate_Thu_11_00.setActive(true);
-        activeTemplate_Fri_11_00 = new Template(DayOfWeek.FRIDAY, LocalTime.of(11,00)); activeTemplate_Fri_11_00.setActive(true);
-        activeTemplate_Sat_11_00 = new Template(DayOfWeek.SATURDAY, LocalTime.of(11,00)); activeTemplate_Sat_11_00.setActive(true);
-        activeTemplate_Sun_07_00 = new Template(DayOfWeek.SUNDAY, LocalTime.of(7,00)); activeTemplate_Sun_07_00.setActive(true);
-        inactiveTemplate = new Template(DayOfWeek.WEDNESDAY, LocalTime.NOON);
-        Set[] newTemplates = new Set[]{
-                new HashSet<Template>(Arrays.asList(activeTemplate_Sun_07_00)),
-                new HashSet<Template>(Arrays.asList(activeTemplate_Mon_00_00, activeTemplate_Mon_08_00, activeTemplate_Mon_08_15)),
-                new HashSet<Template>(Arrays.asList(activeTemplate_Tue_11_00, activeTemplate_Tue_12_00, activeTemplate_Tue_23_00)),
-                new HashSet<Template>(Arrays.asList(activeTemplate_Wed_11_00, inactiveTemplate)),
-                new HashSet<Template>(Arrays.asList(activeTemplate_Thu_11_00)),
-                new HashSet<Template>(Arrays.asList(activeTemplate_Fri_11_00)),
-                new HashSet<Template>(Arrays.asList(activeTemplate_Sat_11_00))};
-
-        office.mergeTemplates(newTemplates);
-        clerk.setWeeks(3);
-        clerk.unleashTemplates(office.getTemplates());
-        //Ergebnisse
-        System.out.println(clerk.sortAppointments());
-        //Ende Sim 1
-
-        //Simulation2: System wird nach einigen Wochen oder Tagen Auszeit neu gestartet:
-        //clerk.catchUp(Instant.now(), Supervisor.getInstance().getLastUpdate(), )
-
+        clerk.catchUp(Instant.now(), office.getTemplates());
 
 
 //        //lastUpdate in die Datenbank

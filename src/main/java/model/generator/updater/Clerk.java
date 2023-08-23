@@ -119,7 +119,7 @@ public class Clerk extends Generator {
      Aufruf der Methode täglich um 00:00h (LocalTime.MIN)
      Instant.now() muss Parameter sein, um Methode testbar zu machen.
      */
-    public Set<Appointment> catchUp(Instant now, Instant lastUpdate, Set<Template>[] templateArr){
+    public Set<Appointment> catchUp(Instant now, Set<Template>[] templateArr){
 
         Set<Appointment> setOfApps = new LinkedHashSet<>();
         System.out.println("LOG: " + now.minus(24, ChronoUnit.HOURS).isAfter(Supervisor.getInstance().getLastUpdate()));
