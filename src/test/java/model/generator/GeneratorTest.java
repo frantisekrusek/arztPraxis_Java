@@ -1,7 +1,6 @@
 package model.generator;
 
 import model.appointment.Template;
-import model.generator.Generator;
 import model.office.Office;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,7 @@ class GeneratorTest {
     }
 
     @Test
-    void generateAppointmentsFromTemplate() {
+    void testGenerateAppsFromSingleTemplate() {
         Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> new Generator(new Office()).generateAppsFromSingleTemplate(mockTemplate,-3, Instant.now()));
     }

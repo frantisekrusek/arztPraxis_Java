@@ -21,21 +21,6 @@ public class Generator {
         this.office = office;
     }
 
-
-    //LÖSCHEN? Übungsmethode: erzeuge Termin für kommenden zB Mittwoch.
-    public Appointment generateAppointment(Template template){
-        LocalDate nextWeekday = LocalDate.now().with(TemporalAdjusters.next(template.getWeekday()));
-        LocalTime startTime = template.getStartTime();
-        ZonedDateTime datetime = ZonedDateTime.of(nextWeekday, startTime, office.getOffice_zoneId());
-
-        String name = datetime.format(DateTimeFormatter.ofPattern("hh:mm, EEEE dd.MM.uuuu"));
-
-        Appointment appointment = new Appointment(name, datetime, false);
-        System.out.println("LOG: appointment created:\nname: " + appointment.getName());
-        return appointment;
-    }//end generateAppointment()
-
-
     /* Generates multiple Appointments from a single template.
     @param weeks determines number of weeks for appointment creation.
     e.g. 2 for a tuesdays-appointment = create 2 appointments: one for next tuesday, one for tuesday after that.

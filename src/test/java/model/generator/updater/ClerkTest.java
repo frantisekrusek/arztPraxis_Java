@@ -78,6 +78,45 @@ class ClerkTest {
                 "Set of Appointments in office has wrong size");
     }
 
+    /* "24h Method":
+    creates one appointment per template for the following date:
+     'lastUpdate' + 1 day + weeks x 7 days (depending on @param weeks, e.g. 1+2x7 ).
+      */
+    @Test
+    void testGenerateAppsOfDay() {
+        //mock lastUpdate
+        Set<Appointment> appointments = new HashSet<>();
+        Instant mockLastUpdate = Instant.parse("2022-01-02T00:00:00.00Z"); //Sunday
+        Instant originalLU = Supervisor.getInstance().getLastUpdate();
+        //core
+        appointments.addAll(mockClerk.generateAppsOfDay(mockLastUpdate, mockTemplatesArr));
+        //size of appointments == size of templateArray[weekday]
+        System.out.println(appointments);
+        int expected = mockTemplatesArr[1].size();// all templates of monday
+        int actual = appointments.size();
+        assertEquals(expected, actual, "size of appointments created does not match number of templates for mondays");
+        Supervisor.getInstance().setLastUpdate(originalLU);
+
+        //each appointment == lastUpdate + 1 day + weeks x 7days
+        LocalDate ldLastUpd = LocalDate.ofInstant(mockLastUpdate, mockClerk.getOffice().getOffice_zoneId());
+        LocalDate expectedLd = ldLastUpd.plus((1 + (mockClerk.getWeeks() * 7)), ChronoUnit.DAYS);
+        for (Appointment a:appointments) {
+            LocalDate actualAppLd = a.getDateTime().toLocalDate();
+            assertEquals(expectedLd, actualAppLd, "appointment has wrong date");
+        }
+    }//end testGenerateAppsOfDay
+
+    //entfernen?
+    //time of lastTemplateOfDay == time of last appointment of Day
+    @Test
+    void testFindLastTemplate() {
+        mockClerk.findLastTemplate(activeTemplate_Tue_12_00.getStartTime());
+        mockClerk.findLastTemplate(activeTemplate_Mon_00_00.getStartTime());
+        mockClerk.findLastTemplate(activeTemplate_Tue_11_00.getStartTime());
+        assertTrue(mockClerk.getLastTemplateOfDay().equals(LocalTime.of(12,00)));
+    }
+
+
 
     public static Stream<Arguments> provideZonedDateTimes(){
         ZonedDateTime monday8h = ZonedDateTime.of(2020,06,01,
@@ -114,47 +153,7 @@ class ClerkTest {
         assertEquals(expectedWeekday, actualWeekday);
     }
 
-    /* "24h Method":
-    creates one appointment per template for the following date:
-     'lastUpdate' + 1 day + weeks x 7 days (depending on @param weeks, e.g. 1+2x7 ).
-      */
-    @Test
-    void testGenerateAppsOfDay() {
-        //mock lastUpdate
-        Set<Appointment> appointments = new HashSet<>();
-        Instant mockLastUpdate = Instant.parse("2022-01-02T00:00:00.00Z"); //Sunday
-        Instant originalLU = Supervisor.getInstance().getLastUpdate();
-        //core
-        appointments.addAll(mockClerk.generateAppsOfDay(mockLastUpdate, mockTemplatesArr));
-        //size of appointments == size of templateArray[weekday]
-        System.out.println(appointments);
-        int expected = mockTemplatesArr[1].size();// all templates of monday
-        int actual = appointments.size();
-        assertEquals(expected, actual, "size of appointments created does not match number of templates for mondays");
-        Supervisor.getInstance().setLastUpdate(originalLU);
 
-        //each appointment == lastUpdate + 1 day + weeks x 7days
-        LocalDate ldLastUpd = LocalDate.ofInstant(mockLastUpdate, mockClerk.getOffice().getOffice_zoneId());
-        LocalDate expectedLd = ldLastUpd.plus((1 + (mockClerk.getWeeks() * 7)), ChronoUnit.DAYS);
-        for (Appointment a:appointments) {
-            LocalDate actualAppLd = a.getDateTime().toLocalDate();
-            assertEquals(expectedLd, actualAppLd, "appointment has wrong date");
-        }
-    }
-
-    //entfernen?
-    //time of lastTemplateOfDay == time of last appointment of Day
-    @Test
-    void testFindLastTemplate() {
-        mockClerk.findLastTemplate(activeTemplate_Tue_12_00.getStartTime());
-        mockClerk.findLastTemplate(activeTemplate_Mon_00_00.getStartTime());
-        mockClerk.findLastTemplate(activeTemplate_Tue_11_00.getStartTime());
-        assertTrue(mockClerk.getLastTemplateOfDay().equals(LocalTime.of(12,00)));
-    }
-
-    //Instant mockLastUpdate
-    //LocalDateTime mockNow
-    //int expectedApps
     public static Stream<Arguments> provideArgsToTestCatchUp(){
         Instant lU_Sun_22_01_02_T_0000 = ZonedDateTime.of
                         (2022,01,02,0,0,0,0,ZoneId.of("Europe/Vienna")).

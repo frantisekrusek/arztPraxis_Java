@@ -5,10 +5,15 @@ Schmierzettel:
 
 next:
 
--TESTS schreiben, Klassen von unten begonnen, aktuell in Arbeit: Clerk.unleashTemplates()
-"normale" Funktionalität + korrekte Fehlerbehandlung
+-TESTS schreiben
+Tests sollen "normale" Funktionalität + korrekte Fehlerbehandlung (Exceptions ?) prüfen
+2.1. Testing for exceptions
+Testing that certain exceptions are thrown are be done with the
+ org.junit.jupiter.api.Assertions.expectThrows() assert statement. You define the expected Exception class and
+ provide code that should throw the exception. -> https://www.vogella.com/tutorials/JUnit/article.html#write-tests-for-the-model-and-the-services
 -ensureThatInitializationOfTolkeinCharactorsWorks
 -ensureThatEqualsWorksForCharaters
+
 Bei Start: Office.templates aus Datenbank holen.
 Begonnen mit getTemplatesFromRepo() in MySQLRepo.clas
 
@@ -20,7 +25,10 @@ GROB-PLAN:
 4.Spring            /dirty
 
 ----------------------------------------------------------------------------------------------------
+KONZEPTE:
+TDD - Test Driven Development: schreibe immer zuerst den Test und erst danach die dazugehörige Methode.
 
+----------------------------------------------------------------------------------------------------
 Vorschlag: Bezugszeit sollte wenn möglich immer Local sein, nur erforderlichenfalls
 	Instant. Damit das Programm z.B. die neuen Tagestermine zur lokalen Mitternacht
 	erstellt. V.a. aber wegen der Einheitlichkeit.
@@ -38,7 +46,17 @@ gute ANLEITUNG: https://www.codejava.net/java-se/jdbc/connect-to-mysql-database-
 ----------------------------------------------------------------------------------------------------
 TESTEN:
 test: Hamcrest, Matcher 'assertThat' - ("Mengenabfragen. Die praktische Methode hasItems() zum Beispiel testet,
- ob Elemente in einer Collection sind; ohne Matcher wäre der Test in Java mehr Schreibarbeit.>"
+ob Elemente in einer Collection sind; ohne Matcher wäre der Test in Java mehr Schreibarbeit.>"
+
+zu Datenbanken?:
+The classical example for a mock object is a data provider. In production an implementation to connect to the real
+data source is used. But for testing a mock object simulates the data source and ensures that the test conditions
+are always the same. ..These mock objects can be provided to the class which is tested. Therefore, the class to be
+tested should avoid any hard dependency on external data.
+https://www.vogella.com/tutorials/SoftwareTesting/article.html
+
+
+
 
 -------------------------------------------------
 MySQL 8: root-password: secret
