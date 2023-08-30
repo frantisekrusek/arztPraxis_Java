@@ -14,8 +14,7 @@ public class OfficeManager extends Person {
     private Office office;
 
     //ctr
-    public OfficeManager(Office office) {
-    this.office = office;
+    public OfficeManager() {
     }
 
     /*

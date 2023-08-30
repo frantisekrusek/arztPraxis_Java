@@ -4,6 +4,7 @@ import model.appointment.Template;
 import model.generator.Supervisor;
 import model.generator.updater.Clerk;
 import model.office.Office;
+import model.person.officeManager.OfficeManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,11 +28,14 @@ class StartTest {
 
     Clerk clerk;
     Office office;
+    OfficeManager officeManager = new OfficeManager();
 
 
     @BeforeEach
     void setUp() {
-        this.office = new Office();
+        this.clerk = new Clerk();
+        this.officeManager = new OfficeManager();
+        this.office = new Office(this.clerk, this.officeManager);
 
         this.clerk = (Clerk)office.getGenerator();
         Template activeTemplate_Mon_00_00, activeTemplate_Mon_08_00, activeTemplate_Mon_08_15,

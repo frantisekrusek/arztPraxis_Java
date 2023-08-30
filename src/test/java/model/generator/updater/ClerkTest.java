@@ -5,6 +5,7 @@ import model.appointment.Template;
 import model.generator.Generator;
 import model.generator.Supervisor;
 import model.office.Office;
+import model.person.officeManager.OfficeManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ClerkTest {
 
+    private Generator mockGenerator;
     private Clerk mockClerk;
     private ZoneId myZoneId;
     private Template activeTemplate_Mon_00_00, activeTemplate_Mon_08_00, activeTemplate_Mon_08_15,
@@ -36,9 +38,12 @@ class ClerkTest {
 
     @BeforeEach
     public void setUpMocks(){
-        Office office = new Office();
+
+        mockGenerator = new Clerk();
+        mockClerk = (Clerk)mockGenerator;
+        Office office = new Office((Clerk)mockGenerator,new OfficeManager());
+        mockGenerator.setOffice(office);
         office.setGenerator(mockClerk);
-        mockClerk = new Clerk(1, office);
         myZoneId = mockClerk.getOffice().getOffice_zoneId();
         activeTemplate_Mon_00_00 = new Template(DayOfWeek.MONDAY, LocalTime.MIDNIGHT); activeTemplate_Mon_00_00.setActive(true);
         activeTemplate_Mon_08_00 = new Template(DayOfWeek.MONDAY, LocalTime.of(8,00)); activeTemplate_Mon_08_00.setActive(true);
@@ -69,7 +74,8 @@ class ClerkTest {
     void testUnleashTemplates() {
         Set<Template> set1 = Collections.singleton(activeTemplate_Mon_00_00);
         Set<Template> set2 = Collections.singleton(inactiveTemplate);
-        Generator generator = new Clerk(1, new Office());
+        Generator generator = new Clerk();
+        generator.setOffice(new Office((Clerk)generator,new OfficeManager()));
         assertEquals(0, generator.getOffice().getAppointments().size(),
                 "Set of Appointments is not empty");
         ((Clerk) generator).unleashTemplates(set1);

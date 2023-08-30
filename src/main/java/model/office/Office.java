@@ -7,12 +7,11 @@ import model.generator.Supervisor;
 import model.generator.updater.Clerk;
 import model.person.officeManager.OfficeManager;
 
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Timer;
 
 public class Office {
     //Each weekdays templates will be held in a Set, up to 7 Sets will be held in this array.
@@ -22,10 +21,23 @@ public class Office {
     private ZoneId office_zoneId = ZoneId.of("Europe/Vienna");
     private ZoneOffset offset = office_zoneId.getRules().getOffset(Instant.now());
     private Generator generator;
+    private Timer timer;
 
-    public Office() {
-        generator = new Clerk(1,this);
-        officeManager = new OfficeManager(this);
+    public Office(Clerk clerkP, OfficeManager officeManagerP) {
+        this.generator = clerkP;
+        Clerk clerk = (Clerk)this.generator;
+        clerk.setWeeks(1);
+        generator.setOffice(this);
+        clerk.setOffice(this);
+        officeManager = officeManagerP;
+        officeManager.setOffice(this);
+        this.timer = new Timer();
+        LocalDateTime localDateTime = LocalDateTime.now().plusDays(1).with(LocalTime.MIN);
+        //LocalDateTime localDateTime = LocalDateTime.now();
+        Date nextTaskDate = Date.from(localDateTime.toInstant(offset));
+
+        timer.scheduleAtFixedRate(new Task((Clerk)this.generator), nextTaskDate, 1000L*60L*60L*24L);
+        //timer.scheduleAtFixedRate(new Task(this), nextTaskDate, 5000L);
         //0..Sunday, 1 Monday, ... 6 Saturday
         //Why? To match Values of Enum java.time.DayOfWeek as close as possible.
         this.templates = new Set[]{

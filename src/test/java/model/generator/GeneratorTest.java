@@ -22,6 +22,6 @@ class GeneratorTest {
     @Test
     void testGenerateAppsFromSingleTemplate() {
         Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> new Generator(new Office()).generateAppsFromSingleTemplate(mockTemplate,-3, Instant.now()));
+                () -> new Generator().generateAppsFromSingleTemplate(mockTemplate,-3, Instant.now()));
     }
 }

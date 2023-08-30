@@ -17,8 +17,7 @@ public class Generator {
 
     //public Generator() {}
 
-    public Generator(Office office) {
-        this.office = office;
+    public Generator() {
     }
 
     /* Generates multiple Appointments from a single template.

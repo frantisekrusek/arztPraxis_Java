@@ -3,6 +3,7 @@ package model.person.officeManager;
 import static org.junit.jupiter.api.Assertions.*;
 
 import model.appointment.Template;
+import model.generator.updater.Clerk;
 import model.office.Office;
 import model.person.officeManager.OfficeManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +22,8 @@ class OfficeManagerTest {
 
     @BeforeEach
     void setOfficeManager() {
-        this.officeManager = new OfficeManager(new Office());
+        this.officeManager = new OfficeManager();
+        officeManager.setOffice(new Office(new Clerk(), new OfficeManager()));
     }
 
     @BeforeEach

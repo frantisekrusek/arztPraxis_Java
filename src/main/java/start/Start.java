@@ -2,6 +2,7 @@ package start;
 
 import database.MySQL_repo;
 import model.appointment.Template;
+import model.generator.Generator;
 import model.generator.Supervisor;
 import model.generator.updater.Clerk;
 import model.office.Office;
@@ -17,7 +18,7 @@ import java.util.stream.Stream;
 public class Start {
     public static void main(String[] args) {
 
-        Office office = new Office();
+        Office office = new Office(new Clerk(), new OfficeManager());
         Clerk clerk = (Clerk)office.getGenerator();
         clerk.catchUp(Instant.now(), office.getTemplates());
 
