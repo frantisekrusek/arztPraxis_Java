@@ -1,6 +1,7 @@
 package start;
 
 import database.MySQL_repo;
+import database.OfficeQueries;
 import model.appointment.Template;
 import model.generator.Generator;
 import model.generator.Supervisor;
@@ -18,9 +19,12 @@ import java.util.stream.Stream;
 public class Start {
     public static void main(String[] args) {
 
-        Office office = new Office(new Clerk(), new OfficeManager());
-        Clerk clerk = (Clerk)office.getGenerator();
-        clerk.catchUp(Instant.now(), office.getTemplates());
+
+        new OfficeQueries().getTemplates_ByWeekday(DayOfWeek.SUNDAY);
+        //PROGRAMMSTARTER:
+//        Office office = new Office(new Clerk(), new OfficeManager());
+//        Clerk clerk = (Clerk)office.getGenerator();
+//        clerk.catchUp(Instant.now(), office.getTemplates());
 
 
 //        //lastUpdate in die Datenbank

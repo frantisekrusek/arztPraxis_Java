@@ -9,6 +9,7 @@ public class Template {
     private LocalTime startTime;
     //current appointments are to be generated from it?
     private boolean active;
+    private int id;
     //are multiple appointments for the same time slot possible?
     //public enum Slot{One, Two}
 
@@ -21,10 +22,18 @@ public class Template {
         active = false;
     }
 
+    public Template(DayOfWeek weekday, LocalTime startTime, int id){
+        this.weekday = weekday;
+        this.startTime = startTime;
+        this.id = id;
+        active = false;
+    }
+
 
     @Override
     public String toString(){
-        return weekday.toString() + " " + startTime.toString();
+        return weekday.toString() + " " + startTime.toString() +
+                " " + id + " active: " + active;
     }
 
 //    @Override
@@ -79,5 +88,13 @@ public class Template {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
