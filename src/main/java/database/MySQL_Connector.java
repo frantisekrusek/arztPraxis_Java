@@ -12,7 +12,6 @@ public class MySQL_Connector {
         try {
             con = DriverManager.getConnection(url);
             if (con != null) {
-                System.out.println("LOG: Connection established");
             }
             return con;
         } catch (SQLException e) {
@@ -52,5 +51,22 @@ public class MySQL_Connector {
                 e.printStackTrace();
             }
         }
+    }//close(ResultSet rs)
+
+    public String getUrl() {
+        return url;
     }
-}
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Connection getCon() {
+        return con;
+    }
+
+    public void setCon(Connection con) {
+        this.con = con;
+    }
+}//end MySQL_Connector
+

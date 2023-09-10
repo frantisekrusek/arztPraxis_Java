@@ -66,33 +66,11 @@ public class MySQL_repo {
         }
     }// end initializeOrGetLastUpdateFromRepo()
 
-    public Set<Template>[] getTemplatesFromRepo(){
-        try {
-            //Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
-            con = DriverManager.getConnection(url);
-            System.out.println("LOG: Connection established");
-            //get Templates
-            
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }finally {
-            try {
-                con.close();
-                System.out.println("LOG: Connection closed");
-            }catch (SQLException e){
-                e.printStackTrace();
-            }
-        }
-        return new Set[]{};
-    }
 
     //todo
     public void _24hMethode(){
         try {
             con = DriverManager.getConnection(url);
-            System.out.println("LOG: Connection established");
-
             //ERSETZE Timestamp statt 'insert into .. '
 //            ps = con.prepareStatement("UPDATE supervisor SET lastUpdate = ? WHERE id = 1");
 //            ps.setTimestamp(1, now);
@@ -105,7 +83,6 @@ public class MySQL_repo {
         } finally {
             try {
                 con.close();
-                System.out.println("LOG: Connection closed");
             }catch (SQLException e){
                 e.printStackTrace();
             }
@@ -113,9 +90,9 @@ public class MySQL_repo {
     }// end _24hMethode()
 
     public void updateTemplate(Template template){
+        System.out.println("LOG: enter MySQL_repo.updateTemplate");
         try {
             con = DriverManager.getConnection(url);
-            System.out.println("LOG: Connection established");
             String weekday = template.getWeekday().toString();
             String startTime = template.getStartTime().toString();
             //? todo: if not exists ?
@@ -130,14 +107,15 @@ public class MySQL_repo {
         } finally {
             try {
                 con.close();
-                System.out.println("LOG: Connection closed");
             }catch (SQLException e){
                 e.printStackTrace();
             }
+            System.out.println("LOG: leave MySQL_repo.updateTemplate");
         }
     }// end updateTemplate()
 
     public void updateTemplates(){
+        System.out.println("LOG: enter MySQL_repo.updateTemplates");
         try {
             //Class.forName("com.mysql.cj.jdbc.Driver").getDeclaredConstructor().newInstance();
             con = DriverManager.getConnection(url);
@@ -170,6 +148,7 @@ public class MySQL_repo {
             }catch (SQLException e){
                 e.printStackTrace();
             }
+            System.out.println("LOG: leave MySQL_repo.updateTemplates");
         }
     }// end updateTemplates()
 

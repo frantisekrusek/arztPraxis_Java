@@ -17,6 +17,7 @@ public class Office {
     //Each weekdays templates will be held in a Set, up to 7 Sets will be held in this array.
     private final Set<Template>[] templates;
     private final Set<Appointment> appointments;
+    //TODO: fetchAppointments und insertAppointment in OfficeQueries
     private OfficeManager officeManager;
     private ZoneId office_zoneId = ZoneId.of("Europe/Vienna");
     private ZoneOffset offset = office_zoneId.getRules().getOffset(Instant.now());
@@ -46,14 +47,14 @@ public class Office {
                 new HashSet<Template>(), new HashSet<Template>(),
                 new HashSet<Template>()};
         this.appointments = new HashSet<>();
-    }
+    }//end Office(Clerk clerkP, OfficeManager officeManagerP)
 
     public Set<Template>[] mergeTemplates(Set<Template>[] newTemplates){
         for (int i=0; i<7; i++ ){
             this.templates[i].addAll(newTemplates[i]);
         }
         return templates;
-    }
+    }//end mergeTemplates()
 
     public Set<Template>[] printTemplates(){
         for (int i=0; i<7; i++ ){

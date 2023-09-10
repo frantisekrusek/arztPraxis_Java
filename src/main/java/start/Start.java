@@ -2,6 +2,7 @@ package start;
 
 import database.MySQL_repo;
 import database.OfficeQueries;
+import database.SupervisorQueries;
 import model.appointment.Template;
 import model.generator.Generator;
 import model.generator.Supervisor;
@@ -19,8 +20,11 @@ import java.util.stream.Stream;
 public class Start {
     public static void main(String[] args) {
 
+        SupervisorQueries supervisorQueries = new SupervisorQueries();
+        supervisorQueries.fetchLastUpdate();
 
-        new OfficeQueries().getTemplates_ByWeekday(DayOfWeek.SUNDAY);
+
+
         //PROGRAMMSTARTER:
 //        Office office = new Office(new Clerk(), new OfficeManager());
 //        Clerk clerk = (Clerk)office.getGenerator();

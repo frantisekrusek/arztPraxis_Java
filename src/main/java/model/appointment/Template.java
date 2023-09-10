@@ -29,7 +29,17 @@ public class Template {
         active = false;
     }
 
-
+    public Template(DayOfWeek weekday, LocalTime startTime, int id, boolean active){
+        this.weekday = weekday;
+        this.startTime = startTime;
+        this.id = id;
+        this.active = active;
+    }
+    public Template(DayOfWeek weekday, LocalTime startTime, boolean active){
+        this.weekday = weekday;
+        this.startTime = startTime;
+        this.active = active;
+    }
     @Override
     public String toString(){
         return weekday.toString() + " " + startTime.toString() +
@@ -54,14 +64,18 @@ public class Template {
 
         Template template = (Template) o;
 
+        if (active != template.active) return false;
+        if (id != template.id) return false;
         if (weekday != template.weekday) return false;
-        return startTime.equals(template.startTime);
+        return startTime != null ? startTime.equals(template.startTime) : template.startTime == null;
     }
 
     @Override
     public int hashCode() {
-        int result = weekday.hashCode();
-        result = 31 * result + startTime.hashCode();
+        int result = weekday != null ? weekday.hashCode() : 0;
+        result = 31 * result + (startTime != null ? startTime.hashCode() : 0);
+        result = 31 * result + (active ? 1 : 0);
+        result = 31 * result + id;
         return result;
     }
 
