@@ -60,6 +60,26 @@ public class Appointment implements Comparable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Appointment that = (Appointment) o;
+
+        if (taken != that.taken) return false;
+        if (!name.equals(that.name)) return false;
+        return dateTime.equals(that.dateTime);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + dateTime.hashCode();
+        result = 31 * result + (taken ? 1 : 0);
+        return result;
+    }
+
+    @Override
     public String toString(){
         return name + "\n";
     }

@@ -1,8 +1,11 @@
 package start;
 
+import controller.Controller;
+import database.AppointmentsRepo;
 import database.MySQL_repo;
 import database.OfficeQueries;
 import database.SupervisorQueries;
+import model.appointment.Appointment;
 import model.appointment.Template;
 import model.generator.Generator;
 import model.generator.Supervisor;
@@ -18,12 +21,25 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 public class Start {
+
+    public static Set<Appointment> provideAppointments(){
+        //String name = zdt.format(DateTimeFormatter.ofPattern("HH:mm, EEEE dd.MM.uuuu"));
+        Appointment sunday_1300 = new Appointment(
+                "13:00, Sunday 01.01.1995",
+                ZonedDateTime.of(1995,1,1,13,0,0,0,
+                        ZoneId.of("Europe/Vienna")),
+                false);
+        Appointment monday_0800 = new Appointment(
+                "08:00, Monday 12.02.1934",
+                ZonedDateTime.of(1934,2,12,8,0,0,0,
+                        ZoneId.of("Europe/Vienna")),
+                false);
+        return new HashSet<Appointment>(Arrays.asList(sunday_1300, monday_0800));
+    }//end provideAppointments
     public static void main(String[] args) {
 
-        SupervisorQueries supervisorQueries = new SupervisorQueries();
-        supervisorQueries.fetchLastUpdate();
-
-
+        Controller controller = new Controller();
+        controller.selectUser();
 
         //PROGRAMMSTARTER:
 //        Office office = new Office(new Clerk(), new OfficeManager());

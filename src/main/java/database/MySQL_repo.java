@@ -26,47 +26,6 @@ public class MySQL_repo {
     ResultSet rs;
     PreparedStatement ps;
 
-    public void initialize_Or_GetLastUpdateFromRepo(){
-        try {
-            con = DriverManager.getConnection(url);
-            System.out.println("LOG: Connection established");
-
-            //Initialize-Part:
-            Timestamp now = Timestamp.from(Instant.now());
-            st = con.createStatement();
-            rs = st.executeQuery("SELECT lastUpdate FROM supervisor");
-            if (!rs.isBeforeFirst())/*Resultset is empty*/{
-                ps = con.prepareStatement("INSERT INTO supervisor (lastUpdate, id) VALUES (?,?)");
-                ps.setTimestamp(1, now);
-                ps.setInt(2,1);
-                ps.executeUpdate();
-                //todo: 'belebe alle aktiven templates'
-            }else {
-            //GetLastUpdate-Part:
-                rs = st.executeQuery("SELECT lastUpdate FROM supervisor WHERE  id = 1");
-                rs.next();/*first row is current row now*/
-                Timestamp timestamp1 = rs.getTimestamp("lastUpdate");
-                //todo
-                Instant instant = timestamp1.toInstant();
-                Supervisor.getInstance().setLastUpdate(instant);
-            }
-            rs.close();
-            st.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (con != null) {
-                try {
-                    con.close();
-                    System.out.println("LOG: Connection closed");
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
-    }// end initializeOrGetLastUpdateFromRepo()
-
-
     //todo
     public void _24hMethode(){
         try {

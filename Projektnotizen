@@ -4,26 +4,16 @@ Stand: TestStart-Methoden soeben fertiggestellt.
 Schmierzettel:
 
 next:
-
--TESTS schreiben
-Tests sollen "normale" Funktionalität + korrekte Fehlerbehandlung (Exceptions ?) prüfen
-2.1. Testing for exceptions
-Testing that certain exceptions are thrown are be done with the
- org.junit.jupiter.api.Assertions.expectThrows() assert statement. You define the expected Exception class and
- provide code that should throw the exception. -> https://www.vogella.com/tutorials/JUnit/article.html#write-tests-for-the-model-and-the-services
--ensureThatInitializationOfTolkeinCharactorsWorks
--ensureThatEqualsWorksForCharaters
-
-Bei Start: Office.templates aus Datenbank holen.
-Begonnen mit getTemplatesFromRepo() in MySQLRepo.clas
-
 ----------------------------------------------------------------------------------------------------
 GROB-PLAN:
-1.Testen abschließen /schnell und dirty
-2.Programm abrunden, abschließen /sauber, einfache Funktionalität
-3.Datenbank         /dirty
+FERTIG 1.Testen abschließen /schnell und dirty
+IN ARBEIT 2.Programm abrunden, abschließen /schnell, rudimentär, einfache Funktionalität
+FERTIG 3.Datenbank         /dirty
 4.Spring            /dirty
 
+NEU GELERNT in DIESEM PROJEKT:
+-JUnit
+-Praxis Datenbank
 ----------------------------------------------------------------------------------------------------
 KONZEPTE:
 TDD - Test Driven Development: schreibe immer zuerst den Test und erst danach die dazugehörige Methode.
@@ -54,6 +44,15 @@ data source is used. But for testing a mock object simulates the data source and
 are always the same. ..These mock objects can be provided to the class which is tested. Therefore, the class to be
 tested should avoid any hard dependency on external data.
 https://www.vogella.com/tutorials/SoftwareTesting/article.html
+
+zu Exceptions:
+Tests sollen "normale" Funktionalität + korrekte Fehlerbehandlung (Exceptions ?) prüfen
+2.1. Testing for exceptions
+Testing that certain exceptions are thrown are be done with the
+ org.junit.jupiter.api.Assertions.expectThrows() assert statement. You define the expected Exception class and
+ provide code that should throw the exception. -> https://www.vogella.com/tutorials/JUnit/article.html#write-tests-for-the-model-and-the-services
+-ensureThatInitializationOfTolkeinCharactorsWorks
+-ensureThatEqualsWorksForCharaters
 
 
 
